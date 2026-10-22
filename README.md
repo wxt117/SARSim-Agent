@@ -1,10 +1,10 @@
 <div align="center">
 
-# [SAGA](https://github.com/wxt117/SARSim-Agent)
+# [SARSim-Agent](https://github.com/wxt117/SARSim-Agent)
 
 ### A Task-Driven and Quality-Assured Agent Framework for SAR Data Simulation and Generation
 
-[![CI](https://github.com/wxt117/SAGA/actions/workflows/ci.yml/badge.svg)](https://github.com/wxt117/SAGA/actions/workflows/ci.yml)
+[![CI](https://github.com/wxt117/SARSim-Agent/actions/workflows/ci.yml/badge.svg)](https://github.com/wxt117/SARSim-Agent/actions/workflows/ci.yml)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](pyproject.toml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-2EA44F.svg)](LICENSE)
 [![Research code](https://img.shields.io/badge/status-research%20release-F59E0B.svg)](#release-scope)
@@ -18,58 +18,58 @@ National Key Laboratory of Scattering and Radiation
 
 </div>
 
-SAGA is a schema-grounded and evidence-aware agent for task-oriented synthetic aperture radar (SAR) data generation and augmentation. Given a natural-language request and heterogeneous SAR inputs, SAGA profiles the dataset, validates its schema, selects a feasible augmentation strategy, compiles an executable recipe, and verifies the resulting data.
-
-> SAGA is not a single image generator. It is the decision and execution layer that connects SAR datasets, augmentation methods, resource constraints, and evaluation evidence in one auditable workflow.
+SARSim-Agent is a task-driven framework for synthetic aperture radar (SAR) data simulation, generation, and augmentation. Given a natural-language request and SAR inputs, it reads the dataset, checks its metadata, selects suitable tools, records the execution steps, and evaluates the generated samples. It connects existing SAR tools into a repeatable workflow under the available computing budget.
 
 <p align="center">
-  <img src="docs/assets/saga-b747-workflow.jpg" width="100%" alt="SAGA workflow for full-azimuth B747 SAR generation">
+  <img src="docs/assets/saga-b747-workflow.jpg" width="100%" alt="SARSim-Agent workflow for full-azimuth B747 SAR generation">
 </p>
 
-<p align="center"><sub><b>End-to-end SAGA workflow.</b> A full-azimuth B747 example covering schema grounding, guarded skill selection, generation, verification, and bounded repair (paper Fig. 2).</sub></p>
+<p align="center"><sub><b>End-to-end SARSim-Agent workflow.</b> A full-azimuth B747 example covering dataset interpretation, tool selection, generation, output checks, and limited repair (paper Fig. 2).</sub></p>
 
 ## Overview
 
 SAR augmentation decisions depend on more than visual realism. Dataset layouts are often laboratory-specific; metadata such as class, azimuth, depression angle, resolution, band, and polarization may be encoded in paths, filenames, sidecars, or annotations. Generation methods also differ in applicability, computational cost, controllability, and failure modes.
 
-SAGA addresses this as a dataset-conditioned decision problem:
+SARSim-Agent connects five steps:
 
-1. **Ground the data.** Extract observable file, image, annotation, and metadata facts, then compile and validate an executable dataset schema.
-2. **Plan under constraints.** Match the task, dataset deficits, hardware budget, and method requirements using compatibility guardrails and benefit-aware ranking.
-3. **Execute auditable recipes.** Convert the selected plan into a deterministic recipe DAG with standardized provenance and skill reports.
-4. **Verify before claiming benefit.** Evaluate quality, distribution, SAR artifacts, duplicates, leakage, and optional downstream utility.
-5. **Repair and learn.** Apply bounded repair when verification fails and retain evidence for future planning.
+1. **Read and check the data.** Scan images, labels, and metadata stored in different formats. Build and validate a dataset schema: rules for reading fields such as category, polarization, and viewing angle from files and folders.
+2. **Select suitable tools.** Match the task and input data to simulation or generation methods, taking account of their requirements, computing cost, and results from previous runs.
+3. **Record the workflow.** Store each step's inputs, parameters, outputs, and dependencies in an executable recipe. A directed acyclic graph (DAG) specifies which steps depend on earlier outputs.
+4. **Check the outputs.** Evaluate image quality, data distributions, SAR artifacts, duplicates, and data leakage. Run downstream task evaluation when requested.
+5. **Repair and reuse results.** Make a limited number of corrections when checks fail, and save reports that can guide later planning.
 
-The LLM-assisted layer is optional. LLMs may propose an intent, schema, or plan, but deterministic validators and guardrails decide whether those proposals are executable.
+LLM assistance is optional. An LLM can help interpret requests and propose dataset schemas or plans. Explicit rules check these proposals before execution.
 
 <p align="center">
-  <img src="docs/assets/saga-architecture.png" width="100%" alt="Overall architecture of SAGA">
+  <img src="docs/assets/saga-architecture.png" width="100%" alt="Overall architecture of SARSim-Agent">
 </p>
 
 <p align="center"><sub><b>Overall architecture.</b> Solid paths are deterministic execution and validated data flow; dashed paths are optional LLM-assisted proposals that must pass validation (paper Fig. 4).</sub></p>
 
 ## Key Features
 
-| Capability | What SAGA provides |
+| Capability | What SARSim-Agent provides |
 | --- | --- |
-| Schema-grounded profiling | Progressive discovery of heterogeneous SAR layouts, metadata coverage, labels, and format constraints |
-| Guarded planning | Intent recognition, compatibility filtering, benefit-cost-risk ranking, and recipe verification |
-| Recipe-centric execution | DAG execution, checkpoints, provenance, standardized reports, and dry-run inspection |
-| SAR-aware verification | Quality, distribution, artifact, duplicate, leakage, and metadata-slice observers |
-| Evidence qualification | Separation of generation success, evaluator evidence, and demonstrated downstream benefit |
-| Bounded feedback | Parameter repair, recipe revision, run continuation, and policy memory |
+| Dataset reading | Inspection and validation of image files, labels, metadata, and dataset layouts |
+| Tool selection | Task interpretation, input compatibility checks, and planning within resource limits |
+| Workflow execution | Recorded steps and dependencies, checkpoints, input/output tracking, and standardized reports |
+| SAR data checks | Quality, distribution, artifact, duplicate, leakage, and metadata-slice evaluation |
+| Task evaluation | Reports that distinguish generated files from measured downstream improvement |
+| Feedback | Limited repair, run continuation, and saved results for later planning |
 
 ## Installation
 
-Python 3.10 or newer is required. The repository's server environment is named `sd3`:
+Python 3.10 or newer is required. The included Conda file creates an environment named `sd3`:
 
 ```bash
-git clone https://github.com/wxt117/SAGA.git
-cd SAGA
+git clone https://github.com/wxt117/SARSim-Agent.git
+cd SARSim-Agent
 conda env create -f environment.yml
 conda activate sd3
 python -m saga --help
 ```
+
+The project is named **SARSim-Agent**; the Python package and CLI remain **`saga`** in this release. Use `python -m saga` in the commands below.
 
 If `sd3` already exists, update it instead:
 
@@ -116,7 +116,7 @@ python -m saga evaluate-output \
   --expected-count 12
 ```
 
-To exercise the end-to-end agent from one request, run:
+To inspect an end-to-end plan from one request, run:
 
 ```bash
 python -m saga agent-run \
@@ -126,11 +126,11 @@ python -m saga agent-run \
   --no-memory
 ```
 
-`agent-run` and computationally expensive skills default to dry-run. Add `--run` only after inspecting the selected recipe, parameters, and backend paths.
+`agent-run` and computationally expensive skills default to dry-run, which writes the plan without running the generation backend. Add `--run` to execute the selected workflow after checking its parameters and backend paths.
 
 ### Optional LLM assistance
 
-The deterministic workflow does not require an LLM. To enable LLM-assisted intent parsing or planning, supply the credential through the environment rather than a YAML file:
+To enable LLM-assisted request interpretation or planning, supply the API key through an environment variable:
 
 ```bash
 export DEEPSEEK_API_KEY="your-api-key"
@@ -164,18 +164,18 @@ Backend configuration examples live in [`configs/skills/`](configs/skills/). Ext
 
 ## Paper Results
 
-The manuscript evaluates SAGA on schema grounding, intent and skill planning, recipe execution, failure detection and repair, downstream augmentation utility, and component ablations.
+The manuscript evaluates dataset interpretation, request interpretation and tool selection, workflow execution, failure detection and repair, downstream task improvement, and the effect of individual components.
 
-Across the reported benchmark of **8 SAR task groups x 12 seeds**, Full SAGA achieved:
+Across the reported benchmark of **8 SAR task groups x 12 seeds**, Full SARSim-Agent achieved:
 
-| Metric | Full SAGA | Interpretation |
+| Metric | Full SARSim-Agent | Interpretation |
 | --- | ---: | --- |
 | Aggregate downstream score | **60.1 +/- 4.5** | Equal-weight macro-average of task-appropriate Accuracy, macro-F1, or mAP |
 | Matched gain over no augmentation | **+7.4 +/- 1.2 pp** | Improvement over the matched no-augmentation baseline |
 | Invalid-sample rate | **1.0%** | Generated samples rejected as invalid |
 | Evidence-qualified improvement rate (Lv5) | **94.8%** | Runs supported by downstream evaluation evidence |
 
-These values combine task-appropriate metrics and should not be interpreted as one homogeneous accuracy measure. Fixed methods perform strongly only on favorable task groups; SAGA instead selects strategies according to task, data, cost, and observed evidence.
+These values combine task-appropriate metrics and should not be interpreted as one homogeneous accuracy measure. Fixed methods perform strongly only on favorable task groups; SARSim-Agent instead selects strategies according to task, data, cost, and observed evidence.
 
 <p align="center">
   <img src="docs/assets/saga-results.png" width="100%" alt="Downstream augmentation results across eight SAR task groups">
@@ -185,17 +185,17 @@ These values combine task-appropriate metrics and should not be interpreted as o
 
 ### Qualitative Evidence
 
-SAGA reports not only generated samples but also the evidence used to evaluate them. The examples below visualize residual artifacts, azimuth coverage, content retention, and target-mask consistency across several skill families.
+SARSim-Agent reports not only generated samples but also the evidence used to evaluate them. The examples below visualize residual artifacts, azimuth coverage, content retention, and target-mask consistency across several skill families.
 
 <p align="center">
-  <img src="docs/assets/saga-qualitative-cases.png" width="620" alt="Qualitative SAGA outputs with observer evidence">
+  <img src="docs/assets/saga-qualitative-cases.png" width="620" alt="Qualitative SARSim-Agent outputs with observer evidence">
 </p>
 
-<p align="center"><sub><b>Representative decision chains.</b> Input or prior, SAGA result, and corresponding observer evidence (paper Fig. 15). These examples provide traceability rather than blinded perceptual evaluation.</sub></p>
+<p align="center"><sub><b>Representative decision chains.</b> Input or prior, SARSim-Agent result, and corresponding observer evidence (paper Fig. 15). These examples provide traceability rather than blinded perceptual evaluation.</sub></p>
 
 ## Release Scope
 
-This repository is a research release of SAGA's decision framework.
+This repository provides the SARSim-Agent framework, a small public demo, and adapters for external SAR tools.
 
 **Reproducible from the repository:** dataset profiling, schema bridging and validation, recipe serialization, traditional augmentation, target-background composition, observers, report validation, and controlled benchmark logic.
 
@@ -236,13 +236,15 @@ The publication check rejects credential-like strings, absolute machine-local pa
 
 ## Citation
 
-The manuscript is currently under review. Please use the following provisional citation and update it with the journal metadata after publication:
+Please use the following provisional citation for the associated manuscript. Journal metadata will be added when available:
 
 ```bibtex
-@article{wu_saga,
-  title   = {SAGA: A Task-Driven and Quality-Assured Agent Framework for SAR Data Generation},
-  author  = {Wu, Xuanting and Zhang, Fan and Ma, Fei and Guan, Ling and Ma, Guochun and Zhou, Yongsheng},
-  note    = {Manuscript under review}
+@misc{wu2026sarsimagent,
+  title  = {SARSim-Agent: A Task-Driven and Quality-Assured Agent Framework for SAR Data Simulation and Generation},
+  author = {Wu, Xuanting and Zhang, Fan and Ma, Fei and Guan, Ling and Ma, Guochun and Xiang, Deliang and Zhou, Yongsheng},
+  year   = {2026},
+  note   = {Research manuscript},
+  url    = {https://github.com/wxt117/SARSim-Agent}
 }
 ```
 
@@ -250,4 +252,5 @@ Machine-readable metadata are provided in [`CITATION.cff`](CITATION.cff).
 
 ## License
 
-SAGA's original code is released under the [MIT License](LICENSE). External datasets, model weights, and third-party backends retain their respective licenses and terms.
+SARSim-Agent's original code is released under the [MIT License](LICENSE). External datasets, model weights, and third-party backends retain their respective licenses and terms.
+
