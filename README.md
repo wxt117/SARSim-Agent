@@ -1,15 +1,15 @@
 <div align="center">
 
-# SAGA
+# [SAGA](https://github.com/wxt117/SARSim-Agent)
 
-### A Task-Driven and Quality-Assured Agent Framework for SAR Data Generation
+### A Task-Driven and Quality-Assured Agent Framework for SAR Data Simulation and Generation
 
 [![CI](https://github.com/wxt117/SAGA/actions/workflows/ci.yml/badge.svg)](https://github.com/wxt117/SAGA/actions/workflows/ci.yml)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](pyproject.toml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-2EA44F.svg)](LICENSE)
 [![Research code](https://img.shields.io/badge/status-research%20release-F59E0B.svg)](#release-scope)
 
-**Xuanting Wu, Fan Zhang, Fei Ma, Ling Guan, Guochun Ma, Yongsheng Zhou**
+**Xuanting Wu, Fan Zhang, Fei Ma, Ling Guan, Guochun Ma, Deliang Xiang, Yongsheng Zhou**
 
 College of Information Science and Technology, Beijing University of Chemical Technology<br>
 National Key Laboratory of Scattering and Radiation
